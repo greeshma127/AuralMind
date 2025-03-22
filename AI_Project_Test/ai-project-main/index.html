@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mood Selector</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --main-bg: #E4B1F0;
+    :root{
+      --main-bg:#E4B1F0;
     }
     body {
       font-family: 'Montserrat', sans-serif;
@@ -18,6 +19,8 @@
       scroll-behavior: smooth;
       overflow-x: hidden;
     }
+
+    /* Background Animation */
     .background-elements {
       position: absolute;
       top: 0;
@@ -27,6 +30,7 @@
       overflow: hidden;
       z-index: -1;
     }
+
     .circle {
       position: absolute;
       width: 50px;
@@ -35,12 +39,32 @@
       border-radius: 50%;
       opacity: 0.3;
       animation: float 6s infinite ease-in-out;
-      box-shadow: 0 0 10px var(--main-bg);
+      box-shadow: 0 0 10px var(--main-bg); /* Add this */
     }
-    .circle:nth-child(1) { top: 20%; left: 10%; animation-duration: 8s; }
-    .circle:nth-child(2) { top: 50%; left: 80%; }
-    .circle:nth-child(3) { top: 80%; left: 30%; animation-duration: 7s; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+    .circle:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      animation-duration: 8s;
+    }
+
+    .circle:nth-child(2) {
+      top: 50%;
+      left: 80%;
+    }
+
+    .circle:nth-child(3) {
+      top: 80%;
+      left: 30%;
+      animation-duration: 7s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Landing Page */
     .landing-page {
       display: flex;
       flex-direction: column;
@@ -51,10 +75,12 @@
       position: relative;
       padding: 0 10px;
     }
+
     .landing-page h1 {
       font-size: 2rem;
       margin-bottom: 10px;
     }
+
     .changing-text {
       font-size: 2rem;
       font-weight: 700;
@@ -62,10 +88,22 @@
       text-shadow: 0 0 5px var(--main-bg);
       animation: glow 2s infinite alternate;
     }
+
     .areyou {
       font-size: 1.5rem;
     }
-    @keyframes glow { from { text-shadow: 0 0 10px var(--main-bg); } to { text-shadow: 0 0 20px var(--main-bg); } }
+
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px var(--main-bg);
+      }
+      to {
+        text-shadow: 0 0 20px var(--main-bg);
+      }
+    }
+
+    /* Arrow */
     .arrow {
       margin-top: 30px;
       width: 40px;
@@ -81,7 +119,13 @@
       animation: bounce 1s infinite;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* Mood Selection Section */
     .mood-section {
       display: flex;
       flex-direction: column;
@@ -90,11 +134,13 @@
       min-height: 100vh;
       padding: 10px;
     }
+
     h2 {
       font-size: 2rem;
       margin-bottom: 20px;
       font-weight: 700;
     }
+
     .moods-container {
       display: flex;
       flex-wrap: wrap;
@@ -102,6 +148,7 @@
       justify-content: center;
       max-width: 100%;
     }
+
     .mood-button {
       padding: 8px 15px;
       border: none;
@@ -115,12 +162,41 @@
       font-weight: 700;
       border-radius: 50px;
       font-size: 0.9rem;
-      box-shadow: 0 0 10px var(--main-bg);
+      box-shadow: 0 0 10px var(--main-bg); 
       animation: glow 1.5s infinite alternate;
+      /*  */
     }
+
+
     .mood-button:hover {
       background: #C599B6;
       transform: scale(1.05);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .landing-page h1 {
+        font-size: 1.5rem;
+      }
+
+      .changing-text, .areyou {
+        font-size: 1.2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .mood-button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+
+      .arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+      }
     }
     #song-list {
       margin-top: 20px;
@@ -128,13 +204,17 @@
     }
     #song-list p { margin: 5px 0; }
   </style>
+  <meta name="theme-color" content="#E4B1F0">
 </head>
 <body>
+  <!-- Background Elements -->
   <div class="background-elements">
     <div class="circle"></div>
     <div class="circle"></div>
     <div class="circle"></div>
   </div>
+
+  <!-- Landing Page -->
   <div class="landing-page">
     <h1>Hi User... How are you <span>feeling</span> today?</h1>
     <span class="areyou">Are you feeling <span id="changing-mood" class="changing-text"></span> ?</span>
@@ -153,34 +233,78 @@
   </div>
   <div id="song-list"></div>
   <script>
+    const moods = ["Happy", "Sad", "Excited", "Angry", "Anxious", "Confident", "Relaxed", "Bored", "Curious", "Tired", "Hopeful", "Grateful"];
+    let moodIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeMood() {
+      const moodElement = document.getElementById('changing-mood');
+      const currentMood = moods[moodIndex];
+
+      if (isDeleting) {
+        moodElement.textContent = currentMood.substring(0, charIndex--);
+      } else {
+        moodElement.textContent = currentMood.substring(0, charIndex++);
+      }
+
+      if (!isDeleting && charIndex === currentMood.length + 1) {
+        isDeleting = true;
+        setTimeout(typeMood, 1000);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        moodIndex = (moodIndex + 1) % moods.length;
+        setTimeout(typeMood, 500);
+      } else {
+        setTimeout(typeMood, isDeleting ? 100 : 150);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(typeMood, 1000);
+    });
     document.addEventListener("DOMContentLoaded", function () {
       const buttons = document.querySelectorAll(".mood-button");
+      const songContainer = document.getElementById("song-list");
+  
       buttons.forEach(button => {
         button.addEventListener("click", async function () {
           const mood = this.innerText;
+          
+          // Show loading message
+          songContainer.innerHTML = "<h2>Recommended Songs</h2><p>Loading songs...</p>";
+  
           try {
             const response = await fetch("http://127.0.0.1:5000/recommend", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ mood })
             });
+  
             const data = await response.json();
             displaySongs(data.songs);
           } catch (error) {
             console.error("Error fetching songs:", error);
+            songContainer.innerHTML = "<h2>Recommended Songs</h2><p>Error fetching songs. Try again.</p>";
           }
         });
       });
+  
       function displaySongs(songs) {
-        const songContainer = document.getElementById("song-list");
         songContainer.innerHTML = "<h2>Recommended Songs</h2>";
-        songs.forEach(song => {
-          const songItem = document.createElement("p");
-          songItem.textContent = song;
-          songContainer.appendChild(songItem);
-        });
+  
+        if (songs.length === 0) {
+          songContainer.innerHTML += "<p>No songs found for this mood.</p>";
+        } else {
+          songs.forEach(song => {
+            const songItem = document.createElement("p");
+            songItem.textContent = song;
+            songContainer.appendChild(songItem);
+          });
+        }
       }
     });
   </script>
+  
 </body>
 </html>
