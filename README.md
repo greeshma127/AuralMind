@@ -1,4 +1,4 @@
-# AI-Project
+# AuralMind - Music Recommendation System
 
 SPOTIFY TOKEN:
 1.Create a Spotify Developer Account → Spotify Developer Dashboard
